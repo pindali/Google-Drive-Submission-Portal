@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <base target="_top">
+    <style>
+        *:focus{
+          outline:none;
+        }
+        
+        h4 {
+            color: black;
+        }
+
+        input {
+            color: black;
+        }
+
+        .dropbtn {
+            border-radius: 50px;
+            background-color: hsl(209, 77%, 76%);
+            color: black;
+
+            padding: 5px;
+            font-size: 14px;
+            border: none;
+        }
+
+        body {
+           background-image: linear-gradient(to right, rgb(125, 68, 156), rgba(0, 0, 255, 0.747));
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f1f1f1;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+        .errorMSG{
+          color: red; 
+          font-family: Courier New;
+        }
+        .navBtn {
+            background-color: hsl(209, 77%, 76%);
+            border-radius: 50px;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #ddd;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown:hover .dropbtn {
+            background-color: rgb(255, 255, 255);
+            color: black;
+        }
+
+        input[type=text] {
+            border: none;
+            border-bottom: 2px solid rgb(0, 174, 255);
+            width: 100%;
+        }
+
+        .submitBtn {
+            border-radius: 50px;
+            background-color: hsl(209, 77%, 76%);
+            color: black;
+            padding: 10px;
+            /* padding-right: 10px;
+            padding-left: 10px; */
+            width: 100%;
+
+            font-size: 14px;
+            border: none;
+        }
+
+        .submitBtn:hover {
+            background-color: rgb(255, 255, 255);
+            color: black;
+        }
+
+        .mainBox {
+
+       
+            margin: auto;
+            margin-top: 5%;
+            width: 22%;
+            border-radius: 24px;
+            background-color: rgb(255, 255, 255);
+            padding: 30px 86px;
+            padding-top: 36px;
+
+        }
+
+
+        #popinstructions,#popinstructions2{
+              position : fixed;
+              background: white;
+              top : 50%;
+              left : 50%;
+              transform: translate(-50%,-50%);
+              width : 600px;
+              padding: 50px;
+              box-shadow: 0 5px 30px rgba(0,0,0,.30); 
+              visibility: hidden;
+              opacity: 0;
+              transition: 0.5s;
+              border: 3px solid;
+            }
+        #popinstructions.active,#popinstructions2.active{
+              top : 50%;
+              visibility: visible;
+              opacity : 1;
+              transition : 0.5s;
+            }
+
+        .mainBox.active{
+          filter: blur(20px);
+        }
+    </style>
+</head>
+<script>
+
+
+    function setAlert(e) {
+
+            var c = document.getElementById('mainBox');
+            c.classList.toggle('active');
+            var pop = document.getElementById('popinstructions2');
+            pop.classList.toggle('active');
+
+        if(document.getElementById("gno").value != "" && document.getElementById("mySelect").value != "zilch"){
+       google.script.run.withFailureHandler(function(err){
+        alert("Submission failed. Please ensure that all your files are smaller than 50 Mb in size.")
+
+        console.log("failure handler", err)
+        var c = document.getElementById('mainBox');
+            c.classList.toggle('active');
+            var pop = document.getElementById('popinstructions2');
+            pop.classList.toggle('active');
+
+    })
+    .withSuccessHandler(function(res){
+        // alert("done"+res )
+        if(res == true){
+          alert("Your files have been uploaded!")
+
+          var c = document.getElementById('mainBox');
+            c.classList.toggle('active');
+            var pop = document.getElementById('popinstructions2');
+            pop.classList.toggle('active');
+        }
+        else{
+          alert("You have already made your submission!")
+          var c = document.getElementById('mainBox');
+            c.classList.toggle('active');
+            var pop = document.getElementById('popinstructions2');
+            pop.classList.toggle('active');
+
+        }
+        console.log("response from findSheet function", res)
+    }).upload(e);
+        }
+        else{
+          if(document.getElementById("mySelect").value == "zilch")
+          document.getElementById("errMsg1").innerHTML="*Select Mentor"
+          else{
+            document.getElementById("errMsg1").innerHTML=""
+          }
+          if(document.getElementById("gno").value == "")
+          document.getElementById("errMsg").innerHTML="*Enter group number"
+          else{
+          document.getElementById("errMsg").innerHTML=""
+
+          }
+        }
+       
+    }
+    
+    function pops(){
+            var c = document.getElementById('mainBox');
+            c.classList.toggle('active');
+            var pop = document.getElementById('popinstructions');
+            pop.classList.toggle('active');
+    }
+
+</script>
+
+<body>
+    <div class="mainBox" id="mainBox">
+
+            style="width: 100%; padding-bottom: 10px;">
+
+        <p>Read the instructions <b style="cursor:pointer; text-decoration: underline;" onclick=pops()>here</b> carefully before making your submissions.</p>
+        <form>
+
+            <div class="dropdown">
+                <label>Select your mentor</label>
+                <select class="dropbtn" name="demoSelect" id="mySelect">
+                    <option value="zilch">Select :</option>
+                    <option value="A">Enter your</option>
+                    <option value="B">Options</option>
+                    <option value="C">for drop down list here</option>
+                </select>
+            </div>
+               <br>
+              
+            <label class="errorMSG" id="errMsg1" ></label>
+            <br>
+            <br>
+            <p style="font-size:smaller;"> Enter the last two digits of your group number.</p>
+            <input type="text" id="gno" name="gno" placeholder="Enter your group number" maxlength="2">
+            <br>
+            <label class="errorMSG" id="errMsg" ></label>
+            <br>
+            <p style="font-size:smaller;"> Please make sure all the files are less than 50 MB in size.</p>
+            <br>
+
+            <label>File upload</label>
+            <br>
+
+            <input type="file" name="upload1">
+            <br>
+            <br>
+
+            <input id="sbmt" class="submitBtn" type="button" value="Upload" onclick="setAlert(this.parentNode)">
+        </form>
+
+    </div>
+    <div class="popinstructions", id="popinstructions">
+      <h4>Instructions</h4>
+      <hr>
+      <p>1.) Edit instructions here.</p>
+
+    </div>
+    <div class="popinstructions", id="popinstructions2">
+      <h3>Uploading. Please wait.</h3>
+    </div>
+    
+</body>
+
+
+</html>
