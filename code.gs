@@ -40,7 +40,7 @@ function upload(e){
   
   return false;
 }
-
+}
 
 function getScriptUrl() {
  var url = ScriptApp.getService().getUrl();
